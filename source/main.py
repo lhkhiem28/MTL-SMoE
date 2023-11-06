@@ -38,8 +38,8 @@ optim = optim.Adam(
 save_ckp_dir = "../ckps/{}".format(args.dataset)
 if not os.path.exists(save_ckp_dir):
     os.makedirs(save_ckp_dir)
-results = train_fn(
-    train_loaders, 200, 
+train_fn(
+    train_loaders, 20, 
     model, 
     optim, 
     save_ckp_dir, 
