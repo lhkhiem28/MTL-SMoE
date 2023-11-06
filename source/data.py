@@ -32,4 +32,4 @@ class ImageDataset(torch.utils.data.Dataset):
             ]
         )(image = image)["image"]
 
-        return image, (label0, label1)
+        return image, [label0, label1]

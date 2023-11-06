@@ -39,7 +39,14 @@ class MultiGateSMoE(nn.Module):
             kernel_size = 2, 
         )
 
-        self.moe_layer = moe.moe_layer()
+        self.moe_layer = moe.moe_layer(
+            model_dim = 12544, 
+            experts = {
+                "type":"ffn", "count_per_node":8, "hidden_size_per_expert":128, 
+                "output_dim":128, 
+            }, scan_expert_func = lambda _, parameter: setattr(parameter, "skip_allreduce", True), 
+            gate_type = [{"type":"top", "k":4, "capacity_factor":0}, {"type":"top", "k":4, "capacity_factor":0}]
+        )
         self.clf0, self.clf1 = Classifier(num_classes), Classifier(num_classes)
 
     def forward(self, 
