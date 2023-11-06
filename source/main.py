@@ -5,6 +5,7 @@ from libs import *
 
 from data import ImageDataset
 from models.models import MultiGateSMoE
+from engines import train_fn
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--dataset", type = str, default = "Multi-MNIST")
@@ -28,4 +29,18 @@ train_loaders = {
 }
 model = MultiGateSMoE(
     num_classes = 10, 
+)
+optim = optim.Adam(
+    model.parameters(), weight_decay = 5e-5, 
+    lr = 1e-3, 
+)
+
+save_ckp_dir = "../ckps/{}".format(args.dataset)
+if not os.path.exists(save_ckp_dir):
+    os.makedirs(save_ckp_dir)
+results = train_fn(
+    train_loaders, 200, 
+    model, 
+    optim, 
+    save_ckp_dir, 
 )

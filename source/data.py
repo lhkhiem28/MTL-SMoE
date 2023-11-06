@@ -22,12 +22,9 @@ class ImageDataset(torch.utils.data.Dataset):
         image = cv2.cvtColor(
             image, 
             code = cv2.COLOR_BGR2GRAY, 
-        )[..., np.newaxis]
+        )[..., np.newaxis]/255
         image = A.Compose(
             [
-                A.Normalize(
-                    mean = (0.1307), std = (0.3081), 
-                ), 
                 AT.ToTensorV2(), 
             ]
         )(image = image)["image"]
