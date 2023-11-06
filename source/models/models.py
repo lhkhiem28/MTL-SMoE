@@ -6,19 +6,19 @@ class Classifier(nn.Module):
         num_classes = 10, 
     ):
         super(Classifier, self).__init__()
-        self.classifier = nn.Sequential(
+        self.clf = nn.Sequential(
             nn.Dropout(0.2), 
             nn.Linear(
-                512, num_classes, 
+                128, num_classes, 
             ), 
         )
 
     def forward(self, 
         input, 
     ):
-        output = self.classifier(input)
+        out = self.clf(input)
 
-        return output
+        return out
 
 class MultiGateSMoE(nn.Module):
     def __init__(self, 
@@ -39,7 +39,8 @@ class MultiGateSMoE(nn.Module):
             kernel_size = 2, 
         )
 
-        # self.moe = moe.moe_layer()
+        self.moe_layer = moe.moe_layer()
+        self.clf0, self.clf1 = Classifier(num_classes), Classifier(num_classes)
 
     def forward(self, 
         input, 
@@ -48,4 +49,7 @@ class MultiGateSMoE(nn.Module):
         input = self.max_pool(input)
         input = input.view(input.shape[0], -1)
 
-        return input
+        moe0, moe1 = self.moe_layer(input, gate_index = 0), self.moe_layer(input, gate_index = 1)
+        out0, out1 = self.clf0(moe0), self.clf1(moe1)
+
+        return out0, out1

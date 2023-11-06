@@ -16,7 +16,7 @@ class ImageDataset(torch.utils.data.Dataset):
         index, 
     ):
         instance = self.df.iloc[index]
-        label1, label2 = instance["label1"], instance["label2"]
+        label0, label1 = instance["label0"], instance["label1"]
 
         image = cv2.imread("{}/{}".format(self.data_dir, instance["Id"]))
         image = cv2.cvtColor(
@@ -32,4 +32,4 @@ class ImageDataset(torch.utils.data.Dataset):
             ]
         )(image = image)["image"]
 
-        return image, (label1, label2)
+        return image, (label0, label1)
