@@ -15,17 +15,17 @@ train_loaders = {
         ImageDataset(
             df_path = "../datasets/{}/train.csv".format(args.dataset), data_dir = "../datasets/{}/train".format(args.dataset), 
         ), 
-        num_workers = 8, batch_size = 80, 
+        num_workers = 8, batch_size = 512, 
         shuffle = True, 
     ), 
     "val":torch.utils.data.DataLoader(
         ImageDataset(
             df_path = "../datasets/{}/val.csv".format(args.dataset), data_dir = "../datasets/{}/val".format(args.dataset), 
         ), 
-        num_workers = 8, batch_size = 80, 
+        num_workers = 8, batch_size = 512, 
         shuffle = True, 
     ), 
 }
 model = MultiGateSMoE(
-    num_tasks = 2, num_classes = 10, 
+    num_classes = 10, 
 )

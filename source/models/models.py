@@ -1,9 +1,28 @@
 import os, sys
 from libs import *
 
+class Classifier(nn.Module):
+    def __init__(self, 
+        num_classes = 10, 
+    ):
+        super(Classifier, self).__init__()
+        self.classifier = nn.Sequential(
+            nn.Dropout(0.2), 
+            nn.Linear(
+                512, num_classes, 
+            ), 
+        )
+
+    def forward(self, 
+        input, 
+    ):
+        output = self.classifier(input)
+
+        return output
+
 class MultiGateSMoE(nn.Module):
     def __init__(self, 
-        num_tasks = 2, num_classes = 10, 
+        num_classes = 10, 
     ):
         super(MultiGateSMoE, self).__init__()
         self.backbone = nn.Sequential(
@@ -16,20 +35,17 @@ class MultiGateSMoE(nn.Module):
             ), 
             nn.ReLU(), 
         )
-        self.max_pool = nn.Sequential(
-            nn.MaxPool2d(
-                kernel_size = 2, 
-            ), 
-            nn.Dropout(0.2), 
+        self.max_pool = nn.MaxPool2d(
+            kernel_size = 2, 
         )
 
-        self.moe = moe.moe_layer()
+        # self.moe = moe.moe_layer()
 
     def forward(self, 
         input, 
     ):
-        output = self.backbone(input)
-        output = self.max_pool(output)
-        output = output.view(output.shape[0], -1)
+        input = self.backbone(input)
+        input = self.max_pool(input)
+        input = input.view(input.shape[0], -1)
 
-        return output
+        return input
